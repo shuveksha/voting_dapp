@@ -269,6 +269,24 @@ contract Election {
     }
 
     /**
+     * @dev Can get particular candidate using candidate Id
+     */
+    function getCandidate(
+        uint256 _candidateId
+    ) public view returns (Candidate memory) {
+        return candidates[_candidateId];
+    }
+
+    /**
+     * @dev Can get particular candidate using candidate Id
+     */
+    function getVoter(
+        address _voterAddress
+    ) public view returns (Voter memory) {
+        return voters[_voterAddress];
+    }
+
+    /**
      * @dev Withdraw to a wallet
      * @param _to Address to transfer amount to
      * @param _amount Amount of ETH in wei
@@ -280,4 +298,8 @@ contract Election {
         require(address(this).balance >= _amount, "No enough fund to withdraw");
         payable(_to).transfer(_amount);
     }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }
