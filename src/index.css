@@ -11,8 +11,7 @@ code {
     monospace;
 }
 
-.add-candidate{
-  
+.add-candidate {
   background: #fff;
   width: 500px;
   margin:auto;
@@ -21,7 +20,16 @@ code {
   margin-top: 100px;
 }
 
-.add-candidate h1{
+.admin-home{
+  background: #fff;
+  width: 960px;
+  margin:auto;
+  border-radius: 25px;
+  padding: 20px;
+  margin-top: 100px;
+}
+
+.add-candidate, .admin-home h1{
   font-family: 'Bebas Neue' !important;
   font-family: 'Bebas Neue';
   font-style: normal;
@@ -49,18 +57,18 @@ code {
 .add-candidate button{
   font-size: 18px;
   border-radius: 25px;
-  background: #648AD4;
-  color: white;
+  background-color: #fff;
+  color: #648AD4;
+  border: 1px solid #648AD4;
   width: 150px;
   height: 50px;
   left: 1560px;
   top: 190px;
-  border: 0;
   cursor: pointer;
 }
 
 .add-candidate button:hover{
-  background-color: #fff;
-  color: #648AD4;
-  border: 1px solid #648AD4;
+  background: #648AD4;
+  color: white;
+  border: 0;
 }
