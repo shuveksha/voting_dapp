@@ -20,6 +20,15 @@ code {
   margin-top: 100px;
 }
 
+.result{
+  background: #fff;
+  width: 960px;
+  margin:auto;
+  border-radius: 25px;
+  padding: 20px;
+  margin-top: 100px;
+}
+
 .admin-home{
   background: #fff;
   width: 960px;
@@ -29,7 +38,33 @@ code {
   margin-top: 100px;
 }
 
-.add-candidate, .admin-home h1{
+.add-candidate h1{
+  font-family: 'Bebas Neue' !important;
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 100%;
+
+  text-align: center;
+
+  color: #0C111B;
+}
+
+.admin-home h1{
+  font-family: 'Bebas Neue' !important;
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 100%;
+
+  text-align: center;
+
+  color: #0C111B;
+}
+
+.result h1{
   font-family: 'Bebas Neue' !important;
   font-family: 'Bebas Neue';
   font-style: normal;
@@ -137,4 +172,40 @@ code {
   background: #2c4f95;
   color: white;
   border: 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin-top: 20px;
+  border-radius: 25px;
+}
+
+table th,
+table td {
+  padding: 10px;
+}
+
+table th {
+  background-color: #648AD4;
+  color: #fff;
+  text-align: left;
+}
+
+table td {
+  text-align: center;
+}
+
+.result h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.result hr {
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+  margin-bottom: 20px;
 }
