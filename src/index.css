@@ -190,13 +190,14 @@ code {
   left: 1560px;
   top: 190px;
   border: 0;
+  padding-left: 15px;
   box-shadow: 0px 0px 120px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
 
 .approve-voter option{
   color: #648AD4;
-  font-size: 14px;
+  font-size: 18px;
   width: 200px;
   height: 50px;
   left: 1560px;
