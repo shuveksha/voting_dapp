@@ -62,15 +62,22 @@ const AdminHome = () => {
             console.log(tx);
             const status = getCurrentState(Number(tx))
             setElectionStatus(status)
-
         } catch (err) {
             console.error(err);
+        }
+    }
+    async function getCandidatesToApprove() {
+        try {
+            const tx = await contractMethod.methods.ge
+        } catch (error) {
+
         }
     }
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
         setActiveAddress(JSON.parse(address));
         checkInitialState();
+        getCandidatesToApprove();
     }, [])
     return (
         <>

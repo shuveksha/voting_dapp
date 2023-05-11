@@ -7,22 +7,45 @@ const VoterHome = () => {
     const [electionStatus, setElectionStatus] = useState("Registration not started yet!")
     const [registrationStarted, setRegistrationStarted] = useState(false);
     const [isElection, setIsElection] = useState(false);
+    const [activeAddress, setActiveAddress] = useState("")
+    const [citizenshipNo, setCitizenshipNo] = useState("");
+
     async function checkInitialState() {
         try {
+
             const tx = await contractMethod.methods.getCurrentState().call();
-            if (tx == 1) setRegistrationStarted(true);
-            if (tx == 2) setRegistrationStarted(false);
-            if (tx == 3) setIsElection(true);
-            if (tx == 4) setIsElection(false);
+            if (Number(tx) === 1) setRegistrationStarted(true);
+            if (Number(tx) === 2) setRegistrationStarted(false);
+            if (Number(tx) === 3) setIsElection(true);
+            if (Number(tx) === 4) setIsElection(false);
             const status = getCurrentState(Number(tx))
             setElectionStatus(status);
         } catch (err) {
             console.error(err);
         }
     }
+    function handleChange(e) {
+        setCitizenshipNo(e.target.value);
+    }
+    async function handleRegisterUsingCitizenship(e) {
+        e.preventDefault();
+        try {
+            console.log(activeAddress)
+            const tx = await contractMethod.methods.registerAsVoter(Number(citizenshipNo)).send({ from: activeAddress })
+                .on('confirmation', () => {
+                    console.log("Registered!");
+                    setCitizenshipNo("");
+                });
+            console.log("Registration Res: ", tx)
+        } catch (err) {
+            console.error(err);
+        }
+    }
     useEffect(() => {
+        const address = localStorage.getItem("activeAddress");
+        setActiveAddress(JSON.parse(address));
         checkInitialState();
-    }, [])
+    }, [isElection, registrationStarted])
     return (
         <>
 
@@ -36,8 +59,8 @@ const VoterHome = () => {
                     </div>
 
                     <form>
-                        <input type='text' placeholder='Citizenship Number' />
-                        <button className='card-button'>Register</button>
+                        <input type='text' placeholder='Citizenship Number' onChange={handleChange} />
+                        <button className='card-button' onClick={handleRegisterUsingCitizenship}>Register</button>
                     </form></div>
                     : isElection ? <CandidatesCard /> : "Wait for the election to start!"}
             </div>

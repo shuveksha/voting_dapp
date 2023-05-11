@@ -104,6 +104,7 @@ contract Election {
      */
     function startElection() public onlyOwner onlyAfter(endReg) {
         startVote = block.timestamp;
+        endReg = MAX_INT;
         state = State.electionStarted;
     }
 
