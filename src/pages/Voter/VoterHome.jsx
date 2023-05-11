@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import CandidatesCard from '../../components/CandidatesCard';
+import { contractMethod } from '../../api/electionContract';
+import { getCurrentState } from '../../utils/contract_utils';
 
 const VoterHome = () => {
     const [electionStatus, setElectionStatus] = useState("Registration not started yet!")
     const [registrationStarted, setRegistrationStarted] = useState(false);
     const [isElection, setIsElection] = useState(false);
-    async function checkRegistration() {
-        // To-Do check the status interacting with contract
-        setRegistrationStarted(true);
-        setElectionStatus("Registration is started!")
-    }
-    async function checkElection() {
-        // To-Do check the status interacting with contract
-        setIsElection(true);
-        setElectionStatus("Election is started!");
+    async function checkInitialState() {
+        try {
+            const tx = await contractMethod.methods.getCurrentState().call();
+            if (tx == 1) setRegistrationStarted(true);
+            if (tx == 2) setRegistrationStarted(false);
+            if (tx == 3) setIsElection(true);
+            if (tx == 4) setIsElection(false);
+            const status = getCurrentState(Number(tx))
+            setElectionStatus(status);
+        } catch (err) {
+            console.error(err);
+        }
     }
     useEffect(() => {
-        // checkRegistration();
-        checkElection();
+        checkInitialState();
     }, [])
     return (
         <>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { contractMethod } from '../../api/electionContract'
+import { contractMethod } from '../../api/electionContract';
+import { getCurrentState } from '../../utils/contract_utils';
 const AdminHome = () => {
     const [electionStatus, setElectionStatus] = useState("Not Started")
     const [activeAddress, setActiveAddress] = useState("")
@@ -55,10 +56,21 @@ const AdminHome = () => {
             console.error(err);
         }
     }
+    async function checkInitialState() {
+        try {
+            const tx = await contractMethod.methods.getCurrentState().call();
+            console.log(tx);
+            const status = getCurrentState(Number(tx))
+            setElectionStatus(status)
 
+        } catch (err) {
+            console.error(err);
+        }
+    }
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
         setActiveAddress(JSON.parse(address));
+        checkInitialState();
     }, [])
     return (
         <>
