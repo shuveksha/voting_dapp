@@ -16,6 +16,16 @@ contract Election {
     uint public endReg;
 
     uint256 MAX_INT = 2 ** 256 - 1;
+    // Election Current state
+    enum State {
+        registrationNotStarted,
+        registrationStarted,
+        registrationEnded,
+        electionStarted,
+        electionEnded
+    }
+
+    State public state = State.registrationNotStarted;
 
     /**
      *	@dev Deployer sets the name of the election.
@@ -46,6 +56,7 @@ contract Election {
         bool voted;
     }
 
+    // Mappings
     mapping(uint => Candidate) candidates;
     mapping(address => Voter) public voters;
 
@@ -93,6 +104,7 @@ contract Election {
      */
     function startElection() public onlyOwner onlyAfter(endReg) {
         startVote = block.timestamp;
+        state = State.electionStarted;
     }
 
     /**
@@ -102,6 +114,7 @@ contract Election {
     function endElection() public onlyOwner onlyAfter(startVote) {
         endVote = block.timestamp;
         startVote = MAX_INT;
+        state = State.electionEnded;
     }
 
     /**
@@ -110,6 +123,7 @@ contract Election {
      */
     function startRegistration() public onlyOwner {
         startReg = block.timestamp;
+        state = State.registrationStarted;
     }
 
     /**
@@ -119,6 +133,7 @@ contract Election {
     function endRegistration() public onlyOwner onlyAfter(startReg) {
         endReg = block.timestamp;
         startReg = MAX_INT;
+        state = State.registrationEnded;
     }
 
     /**
@@ -205,7 +220,7 @@ contract Election {
      */
     function approveVoters(
         address _voter
-    ) public onlyBefore(startVote) onlyAfter(startReg) onlyOwner {
+    ) public onlyBefore(startVote) onlyOwner {
         require(!voters[_voter].registered, "Voter has not registered yet");
         voters[_voter].registered = true;
     }
@@ -284,6 +299,13 @@ contract Election {
         address _voterAddress
     ) public view returns (Voter memory) {
         return voters[_voterAddress];
+    }
+
+    /**
+     * @dev Can get contract internal State
+     */
+    function getCurrentState() public view returns (State) {
+        return state;
     }
 
     /**

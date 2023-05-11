@@ -9,7 +9,6 @@ contract("Election", (accounts) => {
     const voter1 = accounts[1];
     const voter2 = accounts[2];
     const recipient = accounts[3];
-    const non_owner = accounts[4];
     let electionInstance;
 
     beforeEach(async () => {
