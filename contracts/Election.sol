@@ -313,6 +313,7 @@ contract Election {
      * @param _to Address to transfer amount to
      * @param _amount Amount of ETH in wei
      */
+
     function withdraw(
         address payable _to,
         uint _amount

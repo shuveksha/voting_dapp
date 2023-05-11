@@ -1,7 +1,65 @@
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { contractMethod } from '../../api/electionContract'
 const AdminHome = () => {
     const [electionStatus, setElectionStatus] = useState("Not Started")
+    const [activeAddress, setActiveAddress] = useState("")
+    const startRegistration = async (e) => {
+        e.preventDefault();
+        try {
+            const tx = await contractMethod.methods.startRegistration().send({ from: activeAddress })
+                .on('confirmation', () => {
+                    setElectionStatus("Registration Started!")
+                });
+            console.log("startRegistration Res: ", tx)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const endRegistration = async (e) => {
+        e.preventDefault();
+        try {
+            const tx = await contractMethod.methods.endRegistration().send({ from: activeAddress })
+                .on('confirmation', () => {
+                    setElectionStatus("Registration Ended!")
+
+                });
+            console.log("endRegistration Res: ", tx)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const startElection = async (e) => {
+        e.preventDefault();
+        try {
+            const tx = await contractMethod.methods.startElection().send({ from: activeAddress })
+                .on('confirmation', () => {
+                    setElectionStatus("Election Started!")
+                });
+            console.log("startElection Res: ", tx)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const endElection = async (e) => {
+        e.preventDefault();
+        try {
+            const tx = await contractMethod.methods.endElection().send({ from: activeAddress })
+                .on('confirmation', () => {
+                    setElectionStatus("Election Ended!")
+                });
+            console.log("endElection Res: ", tx)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        const address = localStorage.getItem("activeAddress");
+        setActiveAddress(JSON.parse(address));
+    }, [])
     return (
         <>
             <div className='admin-home'>
@@ -9,10 +67,10 @@ const AdminHome = () => {
                 <hr />
                 <h2>Election Status:<span> {electionStatus}</span></h2>
                 <div className='election-states'>
-                    <button>Registration Starts</button>
-                    <button>Registration Ends</button><br />
-                    <button>Election Starts</button>
-                    <button>Election Ends</button>
+                    <button onClick={startRegistration}>Registration Starts</button>
+                    <button onClick={endRegistration}>Registration Ends</button><br />
+                    <button onClick={startElection}>Election Starts</button>
+                    <button onClick={endElection}>Election Ends</button>
                 </div>
             </div>
             <div className='approve-voter'>
