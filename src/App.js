@@ -5,11 +5,13 @@ import AdminHome from './pages/Admin/AdminHome';
 import Results from './pages/Results';
 import VoterHome from './pages/Voter/VoterHome';
 import Home from './pages/User/Home';
+import Sidebar from './components/Sidebar/SideBar';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <Sidebar />
         <Routes>
           {/* user route  */}
           <Route path='/' element={<Home />} />
