@@ -1,13 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import './SideBar.css';
 import { NavLink } from 'react-router-dom';
+import { contractMethod } from '../../api/electionContract';
+import { getUserActiveAddress } from '../../utils/contract_utils';
 
-const Sidebar = ({ isOwner }) => {
+const Sidebar = ({ isOwner, setIsOwner }) => {
+    const [mobile, setmobile] = useState(true);
     const [show, setShow] = useState(false);
+    const [activeAddress, setActiveAddress] = useState("");
 
+    async function checkIsOwner() {
+        try {
+            await contractMethod.methods.getOwner().call((error, result) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    if (activeAddress === result) {
+                        setIsOwner(true);
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        async function getAddress() {
+            const address = await getUserActiveAddress();
+            setActiveAddress(address);
+        }
+        getAddress();
+    }, []);
+    useEffect(() => {
+        checkIsOwner();
+    }, [activeAddress]);
     const handleLogout = (e) => {
-        localStorage.clear();
-        window.reload();
+        // localStorage.clear();
+        // window.reload();
     }
     return (
         <>
