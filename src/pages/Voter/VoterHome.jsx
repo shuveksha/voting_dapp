@@ -9,7 +9,6 @@ const VoterHome = () => {
     const [isElection, setIsElection] = useState(false);
     const [activeAddress, setActiveAddress] = useState("")
     const [citizenshipNo, setCitizenshipNo] = useState("");
-
     async function checkInitialState() {
         try {
 
@@ -45,6 +44,7 @@ const VoterHome = () => {
         const address = localStorage.getItem("activeAddress");
         setActiveAddress(JSON.parse(address));
         checkInitialState();
+
     }, [isElection, registrationStarted])
     return (
         <>
