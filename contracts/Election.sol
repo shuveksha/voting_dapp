@@ -303,6 +303,13 @@ contract Election {
     }
 
     /**
+     * @dev Can get owner of the contract
+     */
+    function getOwner() public view returns (address) {
+        return owner;
+    }
+
+    /**
      * @dev Can get contract internal State
      */
     function getCurrentState() public view returns (State) {

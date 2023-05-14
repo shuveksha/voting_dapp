@@ -66,3 +66,9 @@ export async function fetchCandidates() {
         return [];
     }
 }
+
+export function getUserActiveAddress() {
+    const address = localStorage.getItem("activeAddress");
+    const validAddress = JSON.parse(address);
+    return validAddress;
+}

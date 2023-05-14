@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Data } from './dummyData';
 import CandidateCard from './CandidateCard';
-import { fetchCandidates } from '../utils/contract_utils';
+import { fetchCandidates, getUserActiveAddress } from '../utils/contract_utils';
+import { contractMethod } from '../api/electionContract';
 
 const CandidatesCard = () => {
     const [selectedCandidateId, setSelectedCandidateId] = useState(0);
     const [candidateList, setCandidateList] = useState([]);
-
-    const submitVote = (e) => {
+    const [activeAddress, setActiveAddress] = useState("")
+    const submitVote = async (e) => {
         e.preventDefault();
-        console.log("submit clicked");
+        try {
+            const tx = await contractMethod.methods.vote(Number(selectedCandidateId)).send({ from: activeAddress })
+                .on('confirmation', () => {
+                    console.log('this user voted successfully now');
+                });
+        } catch (error) {
+            if (error.message.includes("not registered/approved")) {
+                console.log("You are not registered or approved");
+            }
+        }
     };
 
     useEffect(() => {
@@ -17,9 +26,9 @@ const CandidatesCard = () => {
             const data = await fetchCandidates();
             setCandidateList(data);
         }
-
+        setActiveAddress(getUserActiveAddress());
         getFetchedData();
-    }, []); // Empty dependency array ensures that this effect runs only once on component mount
+    }, []);
 
 
     return (
@@ -33,7 +42,7 @@ const CandidatesCard = () => {
                 </p>
             </div>
 
-            <div className='card-container'>
+            <div className='card-container pt'>
                 {candidateList.map((candidate, candidateId) => {
                     return (
                         <CandidateCard
@@ -41,7 +50,7 @@ const CandidatesCard = () => {
                             candidateId={candidateId + 1}
                             selectedCandidateId={selectedCandidateId}
                             setSelectedCandidateId={setSelectedCandidateId}
-                            key={candidate.uri}
+                            key={candidate.partyId}
                         />
                     );
                 })}

@@ -484,3 +484,6 @@ table td {
   border-color: #ccc;
   cursor: not-allowed;
 }
+.pt{
+  padding-top: 1.5rem;
+}

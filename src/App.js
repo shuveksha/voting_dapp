@@ -20,7 +20,6 @@ function App() {
           <Route path='/AdminHome' element={<AdminHome />} />
           <Route path='/Results' element={<Results />} />
           <Route path='/VoterHome' element={<VoterHome />} />
-
         </Routes>
       </BrowserRouter>
     </div>

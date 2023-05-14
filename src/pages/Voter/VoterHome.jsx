@@ -52,7 +52,7 @@ const VoterHome = () => {
             <div className='voter-home'>
                 <h1>Vote For Change</h1>
                 <hr />
-                <h2>Election Status: <span className='status'>{electionStatus}</span></h2>
+                <h2 className='pt'>Election Status: <span className='status'>{electionStatus}</span></h2>
                 {registrationStarted ? <div>
                     <div>
                         <p><h3>Register Here</h3></p>

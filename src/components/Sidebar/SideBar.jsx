@@ -1,90 +1,129 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SideBar.css';
 import { NavLink } from 'react-router-dom';
+import { contractMethod } from '../../api/electionContract';
+import { getUserActiveAddress } from '../../utils/contract_utils';
 
 const Sidebar = () => {
     const [mobile, setmobile] = useState(true);
     const [show, setShow] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
+    const [activeAddress, setActiveAddress] = useState("");
 
+    async function checkIsOwner() {
+        try {
+            await contractMethod.methods.getOwner().call((error, result) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    if (activeAddress === result) {
+                        setIsOwner(true);
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        async function getAddress() {
+            const address = await getUserActiveAddress();
+            setActiveAddress(address);
+        }
+
+        getAddress();
+    }, []);
+
+    useEffect(() => {
+        checkIsOwner();
+    }, [activeAddress]);
     return (
-        <main className={show ? 'space-toggle' : null}>
-            <header className={`header ${show ? 'space-toggle' : null}`}>
-                <div className='header-toggle' onClick={() => setShow(!show)}>
-                    <i className={`fas fa-bars ${show ? 'fas fa-times' : null}`}></i>
-                </div>
-                <div className='headbar'>
-                    <label className='logo'>
-                        votingDapp
-                    </label>
-                </div>
-            </header>
+        <>
 
-            <aside className={`sidebar ${show ? 'show' : null}`}>
-                <nav className='nav'>
-                    <div>
-                        <NavLink to='/' className='nav-link' end>
-                            <i className={`fas fa-home nav-link-icon`}></i>
-                            <span className='nav-link-name'>Homepage</span>
-                        </NavLink>
-
-                        <div className='nav-list'>
-                            <NavLink to='/AddCandidates' className='nav-link active'>
-                                <i class="fas fa-plus nav-link-icon"></i>
-                                <span className='nav-link-name'>Add Candidates</span>
-                            </NavLink>
-                            <NavLink to='/candidates' className='nav-link'>
-                                <i class="fas fa-users nav-link-icon"></i>
-                                <span className='nav-link-name '>Candidates</span>
-                            </NavLink>
-
-                            <NavLink to='/results' className='nav-link'>
-                                <i class="fas fa-poll nav-link-icon"></i>
-                                <span className='nav-link-name '>Results</span>
-                            </NavLink>
-                        </div>
+            <main className={show ? 'space-toggle' : null}>
+                <header className={`header ${show ? 'space-toggle' : null}`}>
+                    <div className='header-toggle' onClick={() => setShow(!show)}>
+                        <i className={`fas fa-bars ${show ? 'fas fa-times' : null}`}></i>
                     </div>
+                    {/* <div className='headbar'>
+                        <label className='logo'>
+                            Welcome
+                        </label>
+                    </div> */}
+                </header>
 
-                    <NavLink to='/logout' className='nav-link'>
-                        <i className='fas fa-sign-out-alt nav-link-icon'></i>
-                        <span className='nav-link-name'>Logout</span>
-                    </NavLink>
-                </nav>
-            </aside>
+                <aside className={`sidebar show`}>
+                    <nav className='nav'>
+                        <div>
+                            <NavLink to='/' className='nav-link' end>
+                                <i className={`fas fa-home nav-link-icon`}></i>
+                                <span className='nav-link-name'>Homepage</span>
+                            </NavLink>
 
-            {/* navbar starts here */}
-            <nav className='navbar'>
-                <div className='container'>
-                    <label className='connect'>connect to wallet</label>
-                    <ul className='menu-links'>
-                        {/* Uncomment these links when you're ready */}
-                        <NavLink to='/register' >
-                            <li>register as voter </li>
+                            <div className='nav-list'>
+                                {isOwner && <NavLink to='/AdminHome' className='nav-link active'>
+                                    <i className="fas fa-user nav-link-icon"></i>
+                                    <span className='nav-link-name'>Admin</span>
+                                </NavLink>}
+                                {isOwner && (
+                                    <NavLink to='/AddCandidate' className='nav-link subheading'>
+                                        <i className="fas fa-plus subheading-icon"></i>
+                                        <span className='subheading-text'>Add Candidates</span>
+                                    </NavLink>
+                                )}
+                                <NavLink to='/VoterHome' className='nav-link'>
+                                    <i className="fas fa-check-to-slot nav-link-icon"></i>
+                                    <span className='nav-link-name '>Vote</span>
+                                </NavLink>
+                                <NavLink to='/results' className='nav-link'>
+                                    <i className="fas fa-users nav-link-icon"></i>
+                                    <span className='nav-link-name '>Candidates</span>
+                                </NavLink>
+                                <NavLink to='/Results' className='nav-link'>
+                                    <i className="fas fa-poll nav-link-icon"></i>
+                                    <span className='nav-link-name '>Results</span>
+                                </NavLink>
+
+                            </div>
+                        </div>
+
+                        <NavLink to='/logout' className='nav-link'>
+                            <i className='fas fa-sign-out-alt nav-link-icon'></i>
+                            <span className='nav-link-name'>Logout</span>
                         </NavLink>
-                        <NavLink to='/register'>
-                            <li>end registration </li>
-                        </NavLink>
-                        <NavLink to='/register'>
-                            <li>start election</li>
-                        </NavLink>
-                        <NavLink to='/register'>
-                            <li>end election</li>
-                        </NavLink>
-                    </ul>
-                    <button className='mobile-menu-icon'>
-                        {mobile ? <i class="fas fa-times" /> : <i class="fas fa-bars"></i>}
-                    </button>
+                    </nav>
+                </aside>
 
-                </div>
+                {/* navbar starts here  */}
+                {/* <nav className='navbar'>
+                    <div className='container'>
+                        <label className='connect'>connect to wallet</label>
+                        <ul className='menu-links'>
+                            <NavLink to='/register' >
+                                <li>register as voter </li>
+                            </NavLink>
+                            <NavLink to='/register'>
+                                <li>end registration </li>
+                            </NavLink>
+                            <NavLink to='/register'>
+                                <li>start election</li>
+                            </NavLink>
+                            <NavLink to='/register'>
+                                <li>end election</li>
+                            </NavLink>
+                        </ul>
+                        <button className='mobile-menu-icon'>
+                            {mobile ? <i className="fas fa-times" /> : <i className="fas fa-bars"></i>}
+                        </button>
+                    </div>
+                </nav> */}
 
 
 
 
-            </nav>
-
-
-
-
-        </main>
+            </main>
+        </>
     );
 };
 

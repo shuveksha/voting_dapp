@@ -193,7 +193,7 @@
     }
   
     .show {
-      width: calc(var(--header-height) + 156px);
+      width: calc(var(--header-height) + 12rem);
     }
   
     .space-toggle {
@@ -319,6 +319,20 @@
       }
      
       } 
+
+      .subheading {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+      }
+      
+      .subheading-icon {
+        margin-right: 8px;
+      }
+      
+      .subheading-text {
+        font-weight: bold;
+      }
   
   
     
