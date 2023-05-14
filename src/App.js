@@ -7,15 +7,17 @@ import VoterHome from './pages/Voter/VoterHome';
 import Home from './pages/User/Home';
 import Sidebar from './components/Sidebar/SideBar';
 import AddedCandidates from './components/AddedCandidates';
+import { useState } from 'react';
 
 function App() {
+  const [isOwner, setIsOwner] = useState(false);
   return (
     <div className="App">
       <BrowserRouter>
-        <Sidebar />
+        <Sidebar isOwner={isOwner} setIsOwner={setIsOwner} />
         <Routes>
           {/* user route  */}
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home isOwner={isOwner} setIsOwner={setIsOwner} />} />
           {/* user route  */}
           <Route path='/AddCandidate' element={<AddCandidate />} />
           <Route path='/AdminHome' element={<AdminHome />} />

@@ -1,43 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './SideBar.css';
 import { NavLink } from 'react-router-dom';
-import { contractMethod } from '../../api/electionContract';
-import { getUserActiveAddress } from '../../utils/contract_utils';
 
-const Sidebar = () => {
-    const [mobile, setmobile] = useState(true);
+const Sidebar = ({ isOwner }) => {
     const [show, setShow] = useState(false);
-    const [isOwner, setIsOwner] = useState(false);
-    const [activeAddress, setActiveAddress] = useState("");
 
-    async function checkIsOwner() {
-        try {
-            await contractMethod.methods.getOwner().call((error, result) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    if (activeAddress === result) {
-                        setIsOwner(true);
-                    }
-                }
-            });
-
-        } catch (error) {
-            console.log(error);
-        }
+    const handleLogout = (e) => {
+        localStorage.clear();
+        window.reload();
     }
-    useEffect(() => {
-        async function getAddress() {
-            const address = await getUserActiveAddress();
-            setActiveAddress(address);
-        }
-
-        getAddress();
-    }, []);
-
-    useEffect(() => {
-        checkIsOwner();
-    }, [activeAddress]);
     return (
         <>
 
@@ -89,7 +60,7 @@ const Sidebar = () => {
                         </div>
 
                         <NavLink to='/logout' className='nav-link'>
-                            <i className='fas fa-sign-out-alt nav-link-icon'></i>
+                            <i className='fas fa-sign-out-alt nav-link-icon' onClick={handleLogout}></i>
                             <span className='nav-link-name'>Logout</span>
                         </NavLink>
                     </nav>

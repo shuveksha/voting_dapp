@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import downloadImage from '../../assets/img/download.png';
 import Web3 from "web3";
+import { contractMethod } from '../../api/electionContract';
 
-const Home = () => {
+const Home = ({ isOwner, setIsOwner }) => {
   const [account, setAccount] = useState("");
+
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
@@ -18,8 +20,30 @@ const Home = () => {
     }
   }
   const shortenAddress = (address, chars = 4) => {
-    return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`;
+    return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`.toLowerCase();
   };
+
+  async function checkIsOwner() {
+    try {
+
+      await contractMethod.methods.getOwner().call((error, result) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log("Account", account);
+          console.log("result ", result);
+          if (account.toLowerCase() === result.toLowerCase()) {
+            console.log("Yes Owner")
+            setIsOwner(true);
+          }
+        }
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (window.ethereum) {
       const web3 = new Web3(window.ethereum);
@@ -27,6 +51,9 @@ const Home = () => {
         if (accounts.length > 0) {
           localStorage.setItem("activeAddress", JSON.stringify(accounts[0]))
           setAccount(accounts[0]);
+        } else {
+          setIsOwner(false)
+          localStorage.clear();
         }
       });
       // Listern for account changes
@@ -34,13 +61,23 @@ const Home = () => {
         if (accounts.length > 0) {
           localStorage.setItem("activeAddress", JSON.stringify(accounts[0]))
           setAccount(accounts[0]);
+
         } else {
           setAccount("");
+          setIsOwner(false);
+          localStorage.clear();
         }
       })
     }
 
   }, []);
+
+
+  useEffect(() => {
+    if (account) {
+      checkIsOwner();
+    }
+  }, [account, setIsOwner, isOwner]);
 
   return (
     <div>
