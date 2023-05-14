@@ -6,6 +6,7 @@ import Results from './pages/Results';
 import VoterHome from './pages/Voter/VoterHome';
 import Home from './pages/User/Home';
 import Sidebar from './components/Sidebar/SideBar';
+import AddedCandidates from './components/AddedCandidates';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/AdminHome' element={<AdminHome />} />
           <Route path='/Results' element={<Results />} />
           <Route path='/VoterHome' element={<VoterHome />} />
+          <Route path='/candidates' element={<AddedCandidates />} />
         </Routes>
       </BrowserRouter>
     </div>

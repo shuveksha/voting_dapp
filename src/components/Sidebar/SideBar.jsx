@@ -62,7 +62,7 @@ const Sidebar = () => {
                             </NavLink>
 
                             <div className='nav-list'>
-                                {isOwner && <NavLink to='/AdminHome' className='nav-link active'>
+                                {isOwner && <NavLink to='/AdminHome' className='nav-link'>
                                     <i className="fas fa-user nav-link-icon"></i>
                                     <span className='nav-link-name'>Admin</span>
                                 </NavLink>}
@@ -76,7 +76,7 @@ const Sidebar = () => {
                                     <i className="fas fa-check-to-slot nav-link-icon"></i>
                                     <span className='nav-link-name '>Vote</span>
                                 </NavLink>
-                                <NavLink to='/results' className='nav-link'>
+                                <NavLink to='/candidates' className='nav-link'>
                                     <i className="fas fa-users nav-link-icon"></i>
                                     <span className='nav-link-name '>Candidates</span>
                                 </NavLink>
