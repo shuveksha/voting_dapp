@@ -84,7 +84,7 @@ const AdminHome = () => {
             <div className='admin-home'>
                 <h1>Admin Home</h1>
                 <hr />
-                <h2>Election Status:<span> {electionStatus}</span></h2>
+                <h2 className='pt'>Election Status:<span className='status'> {electionStatus}</span></h2>
                 <div className='election-states'>
                     <button onClick={startRegistration}>Registration Starts</button>
                     <button onClick={endRegistration}>Registration Ends</button><br />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { getPartyName } from '../utils/app_utils';
 
-const CandidateCard = ({ candidate, candidateId, selectedCandidateId, setSelectedCandidateId }) => {
+const CandidateCard = ({ candidate, candidateId, selectedCandidateId, setSelectedCandidateId, isFromAddedCandidates }) => {
 
     function handleCandidateSelection() {
         setSelectedCandidateId(candidateId);
@@ -15,7 +15,10 @@ const CandidateCard = ({ candidate, candidateId, selectedCandidateId, setSelecte
             <div className="card-content">
                 <h2 className="card-title">{candidate.candidate_name}</h2>
                 <div><p className="card-description">{getPartyName(Number(candidate.partyId))}</p></div>
-                <button className={` ${candidateId === selectedCandidateId ? "filled-btn" : "card-button"}`} onClick={handleCandidateSelection}>{candidateId === selectedCandidateId ? "Selected" : "select"}</button>
+                {
+                    !isFromAddedCandidates && <button className={` ${candidateId === selectedCandidateId ? "filled-btn" : "card-button"}`} onClick={handleCandidateSelection}>{candidateId === selectedCandidateId ? "Selected" : "select"}</button>
+                }
+
             </div>
         </div>
     )
