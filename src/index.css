@@ -377,7 +377,7 @@ table td {
   font-weight:normal;
   color: #3a73e0;
 }
-// vote home css
+/* // vote home css  */
 .voter-home h1{
   font-family: 'Bebas Neue' !important;
   font-family: 'Bebas Neue';
@@ -399,7 +399,7 @@ table td {
   margin-top: 100px;
 }
 
-// candidate card section css
+/* // candidate card section css  */
 
 .candidates-card {
   display: flex;
