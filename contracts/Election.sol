@@ -125,6 +125,7 @@ contract Election {
      */
     function startRegistration() public onlyOwner {
         startReg = block.timestamp;
+        endVote = MAX_INT; // for second cycle of vote
         state = State.registrationStarted;
     }
 

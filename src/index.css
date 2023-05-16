@@ -442,6 +442,13 @@ table td {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
+  border-radius: 20px;
+}
+
+.candidate-top{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 .card-container {
   display: flex;

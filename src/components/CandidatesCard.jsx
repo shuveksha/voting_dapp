@@ -35,13 +35,11 @@ const CandidatesCard = () => {
 
     return (
         <div className='candidates-card'>
-            <div>
-                <p className='candidate-select'>
-                    <h3>Select your Candidate</h3>
-                    <button className='filled-btn' disabled={selectedCandidateId > 0 ? false : true} onClick={submitVote}>
-                        Submit
-                    </button>
-                </p>
+            <div className='candidate-top'>
+                <h3>Select your Candidate</h3>
+                <button className='filled-btn' disabled={selectedCandidateId > 0 ? false : true} onClick={submitVote}>
+                    Submit
+                </button>
             </div>
 
             <div className='card-container pt'>
