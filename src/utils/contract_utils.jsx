@@ -83,3 +83,14 @@ export async function fetchVotersList() {
             console.log(error);
         }
 }
+export async function getRegisteredCitizenshipNumbers() {
+    try {
+      const voters = await contractMethod.methods.getRegisteredVoters().call();
+      const citizenshipNumbers = voters.map((voter) => voter.citizenshipNumber);
+      return citizenshipNumbers;
+    }
+    catch (error) {
+      console.error(error);
+      return [];
+    }
+  }

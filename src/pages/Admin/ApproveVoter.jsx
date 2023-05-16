@@ -1,52 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { contractMethod } from '../../api/electionContract';
+import { getCurrentState } from '../../utils/contract_utils';
 
-export async function getRegisteredVoters() {
-  try {
-    const voters = await contractMethod.methods.getRegisteredVoters().call();
-    return voters;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
 const ApproveVoter = () => {
-  const [citizenshipNumber, setCitizenshipNumber] = useState('');
   const [votersList, setVotersList] = useState([]);
+  const [electionStatus, setElectionStatus] = useState([]);
+  const [activeAddress, setActiveAddress] = useState("")
+  const [contractState, setContractState] = useState([]);
+  const [selectedVoter, setSelectedVoter] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  async function checkInitialState() {
     try {
-      
+        const tx = await contractMethod.methods.getCurrentState().call();
+        setContractState(Number(tx));
+        console.log(tx);
+        const status = getCurrentState(Number(tx))
+        setElectionStatus(status)
     } catch (err) {
-      console.error(err);
+        console.error(err);
     }
-  };
+}
+async function getVotersToApprove() {
+    if (contractState < 3) {
+        try {
+            const tx = await contractMethod.methods.getNonApprovedVoters().call();
+            setVotersList(tx);
+            console.log(tx);
+            setSelectedVoter(tx[0][0]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 
-  const handleInputChange = (e) => {
-    setCitizenshipNumber(e.target.value);
-  };
+useEffect(() => {
+    const address = localStorage.getItem("activeAddress");
+    setActiveAddress(JSON.parse(address));
+    checkInitialState();
+    getVotersToApprove();
+}, [])
 
-  const handleFetchVoters = async () => {
+
+const handleApproveClick = async (e) => {
     try {
-      const voters = await contractMethod.methods.getVoters().call();
-      setVotersList(voters);
+        e.preventDefault();
+        const tx = await contractMethod.methods.approveVoters(selectedVoter).send({ from: activeAddress })
+        console.log(tx);
+        window.location.reload();
     } catch (error) {
-      console.error(error);
+        console.log(error);
     }
-  };
+}
 
   return (
     <div className='approve-voter'>
-      <h1>Add Voter</h1>
+      <h1>Approve Voter</h1>
       <hr />
       <br />
       <table>
         <thead>
           <tr>
             <th>Serial No.</th>
-            <th>Citizenship Number</th>
-            <th>Status</th>
+            <th>Voter ID</th>
             <th>Approve Voter</th>
           </tr>
         </thead>
@@ -55,8 +70,7 @@ const ApproveVoter = () => {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{voter}</td>
-              <td>{voter.status}</td>
-              <td><button className='ApproveVoter' type='button' onClick={handleSubmit}c>Approve</button></td>
+              <td><button onClick={handleApproveClick} disabled={selectedVoter === 0}>Approve</button></td>
             </tr>
           ))}
         </tbody>
@@ -65,4 +79,4 @@ const ApproveVoter = () => {
   );
 };
 
-export default ApproveVoter;
+export default ApproveVoter

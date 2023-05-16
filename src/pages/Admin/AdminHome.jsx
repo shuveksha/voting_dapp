@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { contractMethod } from '../../api/electionContract';
 import { getCurrentState } from '../../utils/contract_utils';
+
 const AdminHome = () => {
     const [electionStatus, setElectionStatus] = useState("Not Started")
     const [activeAddress, setActiveAddress] = useState("")
@@ -125,15 +126,7 @@ const AdminHome = () => {
                 </div>
                 {contractState < 3 && <div className='approve-voter'>
                     <h3>Pending Voter Approval</h3>
-                    {/* <form>
-                        <ul>
-                            {votersList.map((voter, index) => (
-                                <li key={index}>
-                                    {voter} <button>Approve</button>
-                                </li>
-                            ))}
-                        </ul>
-                    </form> */}
+
                     <form>
                         <select onChange={handleSelectChange}>
                             {votersList.map((voter, index) => (
