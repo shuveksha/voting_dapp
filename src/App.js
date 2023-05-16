@@ -7,6 +7,7 @@ import VoterHome from './pages/Voter/VoterHome';
 import Home from './pages/User/Home';
 import Sidebar from './components/Sidebar/SideBar';
 import AddedCandidates from './components/AddedCandidates';
+import ApproveVoter from './pages/Admin/ApproveVoter';
 import { useState } from 'react';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path='/Results' element={<Results />} />
           <Route path='/VoterHome' element={<VoterHome />} />
           <Route path='/candidates' element={<AddedCandidates />} />
+          <Route path='/ApproveVoter' element={<ApproveVoter />} />
         </Routes>
       </BrowserRouter>
     </div>

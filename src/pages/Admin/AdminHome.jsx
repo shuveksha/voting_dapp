@@ -75,19 +75,7 @@ const AdminHome = () => {
         } catch (error) {
 
         }
-    }
-
-    async function approveVoter(address) {
-        try {
-            await contractMethod.methods.approveVoter(address).send({ from: activeAddress });
-            const voters = await contractMethod.methods.getVotersToApprove().call();
-            const approved = await contractMethod.methods.getApprovedVoters().call();
-            setVotersToApprove(voters);
-            setApprovedVoters(approved);
-        } catch (error) {
-            console.error(error);
-        }
-    }      
+    }     
 
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
@@ -96,24 +84,8 @@ const AdminHome = () => {
         getCandidatesToApprove();
     }, [])
 
-    const RegisteredVotersDropdown = () => {
-        const [votersList, setVotersList] = useState([]);
-      
-        useEffect(() => {
-          async function fetchVoters() {
-            try {
-              const voters = await contractMethod.methods.getVoters().call();
-              setVotersList(voters);
-            } catch (error) {
-              console.error(error);
-            }
-          }
-      
-          fetchVoters();
-        }, []);
-      
 
-      }
+      
     return (
         <>
             <div className='admin-home'>
@@ -125,19 +97,6 @@ const AdminHome = () => {
                     <button onClick={endRegistration}>Registration Ends</button><br />
                     <button onClick={startElection}>Election Starts</button>
                     <button onClick={endElection}>Election Ends</button>
-                </div>
-                <div className='approve-voters'>
-                    <h3>Pending Voter Approval</h3>
-                    <form>
-                        <ul>
-                            {votersList.map((voter, index) => (
-                            <li key={index}>
-                                {voter} <button>Approve</button>
-                            </li>
-                            ))}
-                        </ul>
-                    </form>
-                    
                 </div>
             </div>
             
