@@ -4,7 +4,6 @@ import { fetchCandidates, getUserActiveAddress } from '../utils/contract_utils';
 const AddedCandidates = () => {
     const [selectedCandidateId, setSelectedCandidateId] = useState(0);
     const [candidateList, setCandidateList] = useState([]);
-    const [isFromAddedCandidates, setIsFromAddedCandidates] = useState(true);
 
 
     useEffect(() => {
@@ -19,11 +18,8 @@ const AddedCandidates = () => {
 
             <div className='candidates-card'>
                 <div>
-                    <p className='candidate-select'>
+                    <p className='candidate-select pt'>
                         <h2>Available Candidates to Vote</h2>
-                        {/* <button className='filled-btn' disabled={selectedCandidateId > 0 ? false : true} onClick={submitVote}>
-                        Submit
-                    </button> */}
                     </p>
                 </div>
                 <div className='card-container pt'>
@@ -35,7 +31,7 @@ const AddedCandidates = () => {
                                 selectedCandidateId={selectedCandidateId}
                                 setSelectedCandidateId={setSelectedCandidateId}
                                 key={candidate.partyId}
-                                isFromAddedCandidates={isFromAddedCandidates}
+                                isFromAddedCandidates={true}
                             />
                         );
                     })}

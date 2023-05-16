@@ -5,8 +5,8 @@ const AdminHome = () => {
     const [electionStatus, setElectionStatus] = useState("Not Started")
     const [activeAddress, setActiveAddress] = useState("")
     const [votersList, setVotersList] = useState([]);
-    const [votersToApprove, setVotersToApprove] = useState([]);
-    const [approvedVoters, setApprovedVoters] = useState([]);
+    const [contractState, setContractState] = useState(0);
+    const [selectedVoter, setSelectedVoter] = useState(0);
     const startRegistration = async (e) => {
         e.preventDefault();
         try {
@@ -62,6 +62,7 @@ const AdminHome = () => {
     async function checkInitialState() {
         try {
             const tx = await contractMethod.methods.getCurrentState().call();
+            setContractState(Number(tx));
             console.log(tx);
             const status = getCurrentState(Number(tx))
             setElectionStatus(status)
@@ -69,23 +70,47 @@ const AdminHome = () => {
             console.error(err);
         }
     }
-    async function getCandidatesToApprove() {
-        try {
-            const tx = await contractMethod.methods.ge
-        } catch (error) {
-
+    async function getVotersToApprove() {
+        if (contractState < 3) {
+            try {
+                const tx = await contractMethod.methods.getNonApprovedVoters().call();
+                setVotersList(tx);
+                console.log(tx);
+                setSelectedVoter(tx[0][0]);
+            } catch (error) {
+                console.log(error);
+            }
         }
-    }     
+    }
+    const shortenAddress = (address, chars = 4) => {
+        return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`;
+    };
 
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
         setActiveAddress(JSON.parse(address));
         checkInitialState();
-        getCandidatesToApprove();
+        getVotersToApprove();
     }, [])
 
 
-      
+    const handleSelectChange = (e) => {
+        const Candidate = e.target.value;
+        const data = Candidate.split(",");
+        const address = data[0];
+        setSelectedVoter(address);
+    }
+
+    const handleApproveClick = async (e) => {
+        try {
+            e.preventDefault();
+            const tx = await contractMethod.methods.approveVoters(selectedVoter).send({ from: activeAddress })
+            console.log(tx);
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <>
             <div className='admin-home'>
@@ -98,8 +123,29 @@ const AdminHome = () => {
                     <button onClick={startElection}>Election Starts</button>
                     <button onClick={endElection}>Election Ends</button>
                 </div>
+                {contractState < 3 && <div className='approve-voter'>
+                    <h3>Pending Voter Approval</h3>
+                    {/* <form>
+                        <ul>
+                            {votersList.map((voter, index) => (
+                                <li key={index}>
+                                    {voter} <button>Approve</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </form> */}
+                    <form>
+                        <select onChange={handleSelectChange}>
+                            {votersList.map((voter, index) => (
+                                <option key={index} value={voter}>{shortenAddress(voter[0])}</option>
+                            ))}
+                        </select>
+                        <button onClick={handleApproveClick} disabled={selectedVoter === 0}>Approve</button>
+                    </form>
+
+                </div>}
             </div>
-            
+
         </>
     )
 }

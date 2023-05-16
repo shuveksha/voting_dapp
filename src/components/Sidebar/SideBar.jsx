@@ -54,7 +54,7 @@ const Sidebar = ({ isOwner, setIsOwner }) => {
                     </div> */}
                 </header>
 
-                <aside className={`sidebar show`}>
+                <aside className={`sidebar ${show ? "show" : null}`}>
                     <nav className='nav'>
                         <div>
                             <NavLink to='/' className='nav-link' end>

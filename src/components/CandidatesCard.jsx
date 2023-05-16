@@ -9,14 +9,16 @@ const CandidatesCard = () => {
     const [activeAddress, setActiveAddress] = useState("")
     const submitVote = async (e) => {
         e.preventDefault();
+        console.log(selectedCandidateId)
         try {
             const tx = await contractMethod.methods.vote(Number(selectedCandidateId)).send({ from: activeAddress })
-                .on('confirmation', () => {
-                    console.log('this user voted successfully now');
-                });
+            console.log(tx);
         } catch (error) {
             if (error.message.includes("not registered/approved")) {
                 console.log("You are not registered or approved");
+            }
+            if (error.message.includes("have already voted")) {
+                console.log("You are voted!");
             }
         }
     };
@@ -33,13 +35,11 @@ const CandidatesCard = () => {
 
     return (
         <div className='candidates-card'>
-            <div>
-                <p className='candidate-select'>
-                    <h3>Select your Candidate</h3>
-                    <button className='filled-btn' disabled={selectedCandidateId > 0 ? false : true} onClick={submitVote}>
-                        Submit
-                    </button>
-                </p>
+            <div className='candidate-top'>
+                <h3>Select your Candidate</h3>
+                <button className='filled-btn' disabled={selectedCandidateId > 0 ? false : true} onClick={submitVote}>
+                    Submit
+                </button>
             </div>
 
             <div className='card-container pt'>
