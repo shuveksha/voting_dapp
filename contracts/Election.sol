@@ -14,8 +14,9 @@ contract Election {
     uint public endVote;
     uint public startReg;
     uint public endReg;
-
+    address[] public voterAddresses;
     uint256 MAX_INT = 2 ** 256 - 1;
+
     // Election Current state
     enum State {
         registrationNotStarted,
@@ -160,6 +161,7 @@ contract Election {
             0,
             false // default for the voted state
         );
+        voterAddresses.push(msg.sender); // making list of addresses
         emit NewRegistration(msg.sender, citizenshipNumber);
     }
 
@@ -210,6 +212,17 @@ contract Election {
             list[i - 1].candidateVoteCount = 0;
         }
         return list;
+    }
+
+    /**
+     * @dev Can get registered voter address for approval and voters stats
+     */
+    function getVoters() public view returns (Voter[] memory) {
+        Voter[] memory voterList = new Voter[](voterAddresses.length);
+        for (uint i = 0; i < voterAddresses.length; i++) {
+            voterList[i] = voters[voterAddresses[i]];
+        }
+        return voterList;
     }
 
     /**

@@ -5,8 +5,7 @@ const AdminHome = () => {
     const [electionStatus, setElectionStatus] = useState("Not Started")
     const [activeAddress, setActiveAddress] = useState("")
     const [votersList, setVotersList] = useState([]);
-    const [votersToApprove, setVotersToApprove] = useState([]);
-    const [approvedVoters, setApprovedVoters] = useState([]);
+    const [contractState, setContractState] = useState(0);
     const startRegistration = async (e) => {
         e.preventDefault();
         try {
@@ -62,6 +61,7 @@ const AdminHome = () => {
     async function checkInitialState() {
         try {
             const tx = await contractMethod.methods.getCurrentState().call();
+            setContractState(Number(tx));
             console.log(tx);
             const status = getCurrentState(Number(tx))
             setElectionStatus(status)
@@ -69,51 +69,54 @@ const AdminHome = () => {
             console.error(err);
         }
     }
-    async function getCandidatesToApprove() {
-        try {
-            const tx = await contractMethod.methods.ge
-        } catch (error) {
-
+    async function getVotersToApprove() {
+        if (contractState < 3) {
+            try {
+                const tx = await contractMethod.methods.getVoters().call();
+                setVotersList(tx);
+                console.log(tx);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
-    async function approveVoter(address) {
-        try {
-            await contractMethod.methods.approveVoter(address).send({ from: activeAddress });
-            const voters = await contractMethod.methods.getVotersToApprove().call();
-            const approved = await contractMethod.methods.getApprovedVoters().call();
-            setVotersToApprove(voters);
-            setApprovedVoters(approved);
-        } catch (error) {
-            console.error(error);
-        }
-    }      
+    // async function approveVoter(address) {
+    //     try {
+    //         await contractMethod.methods.approveVoter(address).send({ from: activeAddress });
+    //         const voters = await contractMethod.methods.getVotersToApprove().call();
+    //         const approved = await contractMethod.methods.getApprovedVoters().call();
+    //         setVotersToApprove(voters);
+    //         setApprovedVoters(approved);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }      
 
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
         setActiveAddress(JSON.parse(address));
         checkInitialState();
-        getCandidatesToApprove();
+        getVotersToApprove();
     }, [])
 
-    const RegisteredVotersDropdown = () => {
-        const [votersList, setVotersList] = useState([]);
-      
-        useEffect(() => {
-          async function fetchVoters() {
-            try {
-              const voters = await contractMethod.methods.getVoters().call();
-              setVotersList(voters);
-            } catch (error) {
-              console.error(error);
-            }
-          }
-      
-          fetchVoters();
-        }, []);
-      
+    // const RegisteredVotersDropdown = () => {
+    //     const [votersList, setVotersList] = useState([]);
 
-      }
+    //     useEffect(() => {
+    //       async function fetchVoters() {
+    //         try {
+    //           const voters = await contractMethod.methods.getVoters().call();
+    //           setVotersList(voters);
+    //         } catch (error) {
+    //           console.error(error);
+    //         }
+    //       }
+    //       fetchVoters();
+    //     }, []);
+
+
+    //   }
     return (
         <>
             <div className='admin-home'>
@@ -126,21 +129,21 @@ const AdminHome = () => {
                     <button onClick={startElection}>Election Starts</button>
                     <button onClick={endElection}>Election Ends</button>
                 </div>
-                <div className='approve-voters'>
+                {contractState < 3 && <div className='approve-voters'>
                     <h3>Pending Voter Approval</h3>
                     <form>
                         <ul>
                             {votersList.map((voter, index) => (
-                            <li key={index}>
-                                {voter} <button>Approve</button>
-                            </li>
+                                <li key={index}>
+                                    {voter} <button>Approve</button>
+                                </li>
                             ))}
                         </ul>
                     </form>
-                    
-                </div>
+
+                </div>}
             </div>
-            
+
         </>
     )
 }
