@@ -217,12 +217,23 @@ contract Election {
     /**
      * @dev Can get registered voter address for approval and voters stats
      */
-    function getVoters() public view returns (Voter[] memory) {
-        Voter[] memory voterList = new Voter[](voterAddresses.length);
+    function getNonApprovedVoters() public view returns (Voter[] memory) {
+        uint nonApprovedVoterCount = 0;
+        // Iteration for size of list for nonApprovedVoters
         for (uint i = 0; i < voterAddresses.length; i++) {
-            voterList[i] = voters[voterAddresses[i]];
+            if (!voters[voterAddresses[i]].registered) {
+                nonApprovedVoterCount++;
+            }
         }
-        return voterList;
+        Voter[] memory nonApprovedVoters = new Voter[](nonApprovedVoterCount);
+        uint count = 0;
+        for (uint i = 0; i < voterAddresses.length; i++) {
+            if (!voters[voterAddresses[i]].registered) {
+                nonApprovedVoters[count] = voters[voterAddresses[i]];
+                count++;
+            }
+        }
+        return nonApprovedVoters;
     }
 
     /**

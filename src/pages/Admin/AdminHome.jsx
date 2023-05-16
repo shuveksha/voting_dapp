@@ -6,6 +6,7 @@ const AdminHome = () => {
     const [activeAddress, setActiveAddress] = useState("")
     const [votersList, setVotersList] = useState([]);
     const [contractState, setContractState] = useState(0);
+    const [selectedVoter, setSelectedVoter] = useState(0);
     const startRegistration = async (e) => {
         e.preventDefault();
         try {
@@ -72,26 +73,18 @@ const AdminHome = () => {
     async function getVotersToApprove() {
         if (contractState < 3) {
             try {
-                const tx = await contractMethod.methods.getVoters().call();
+                const tx = await contractMethod.methods.getNonApprovedVoters().call();
                 setVotersList(tx);
                 console.log(tx);
+                setSelectedVoter(tx[0][0]);
             } catch (error) {
                 console.log(error);
             }
         }
     }
-
-    // async function approveVoter(address) {
-    //     try {
-    //         await contractMethod.methods.approveVoter(address).send({ from: activeAddress });
-    //         const voters = await contractMethod.methods.getVotersToApprove().call();
-    //         const approved = await contractMethod.methods.getApprovedVoters().call();
-    //         setVotersToApprove(voters);
-    //         setApprovedVoters(approved);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }      
+    const shortenAddress = (address, chars = 4) => {
+        return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`;
+    };
 
     useEffect(() => {
         const address = localStorage.getItem("activeAddress");
@@ -100,23 +93,24 @@ const AdminHome = () => {
         getVotersToApprove();
     }, [])
 
-    // const RegisteredVotersDropdown = () => {
-    //     const [votersList, setVotersList] = useState([]);
 
-    //     useEffect(() => {
-    //       async function fetchVoters() {
-    //         try {
-    //           const voters = await contractMethod.methods.getVoters().call();
-    //           setVotersList(voters);
-    //         } catch (error) {
-    //           console.error(error);
-    //         }
-    //       }
-    //       fetchVoters();
-    //     }, []);
+    const handleSelectChange = (e) => {
+        const Candidate = e.target.value;
+        const data = Candidate.split(",");
+        const address = data[0];
+        setSelectedVoter(address);
+    }
 
-
-    //   }
+    const handleApproveClick = async (e) => {
+        try {
+            e.preventDefault();
+            const tx = await contractMethod.methods.approveVoters(selectedVoter).send({ from: activeAddress })
+            console.log(tx);
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <>
             <div className='admin-home'>
@@ -129,9 +123,9 @@ const AdminHome = () => {
                     <button onClick={startElection}>Election Starts</button>
                     <button onClick={endElection}>Election Ends</button>
                 </div>
-                {contractState < 3 && <div className='approve-voters'>
+                {contractState < 3 && <div className='approve-voter'>
                     <h3>Pending Voter Approval</h3>
-                    <form>
+                    {/* <form>
                         <ul>
                             {votersList.map((voter, index) => (
                                 <li key={index}>
@@ -139,6 +133,14 @@ const AdminHome = () => {
                                 </li>
                             ))}
                         </ul>
+                    </form> */}
+                    <form>
+                        <select onChange={handleSelectChange}>
+                            {votersList.map((voter, index) => (
+                                <option key={index} value={voter}>{shortenAddress(voter[0])}</option>
+                            ))}
+                        </select>
+                        <button onClick={handleApproveClick} disabled={selectedVoter === 0}>Approve</button>
                     </form>
 
                 </div>}
