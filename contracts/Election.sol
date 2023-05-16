@@ -95,7 +95,7 @@ contract Election {
      *
      */
     modifier onlyAfter(uint _time) {
-        require(block.timestamp > _time, "Wait for start");
+        require(block.timestamp >= _time, "Wait for start");
         _;
     }
 
