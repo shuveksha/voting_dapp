@@ -1,5 +1,4 @@
 const Election = artifacts.require("./Election.sol");
-
 const { expect } = require("chai");
 const { time } = require("@openzeppelin/test-helpers");
 // const truffleAssert = require('truffle-assertions')

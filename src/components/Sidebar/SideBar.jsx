@@ -81,12 +81,16 @@ const Sidebar = ({ isOwner, setIsOwner }) => {
                                     <i className="fas fa-users nav-link-icon"></i>
                                     <span className='nav-link-name '>Candidates</span>
                                 </NavLink>
+                                {isOwner && <NavLink to='/ApproveVoter' className='nav-link'>
+                                    <i className="fas fa-user-plus nav-link-icon"></i>
+                                    <span className='nav-link-name '>Approve Voters</span>
+                                </NavLink>}
                                 <NavLink to='/Results' className='nav-link'>
                                     <i className="fas fa-poll nav-link-icon"></i>
                                     <span className='nav-link-name '>Results</span>
                                 </NavLink>
-
                             </div>
+                            
                         </div>
 
                         <NavLink to='/logout' className='nav-link'>

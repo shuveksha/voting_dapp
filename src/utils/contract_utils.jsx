@@ -67,8 +67,19 @@ export async function fetchCandidates() {
     }
 }
 
+
 export function getUserActiveAddress() {
     const address = localStorage.getItem("activeAddress");
     const validAddress = JSON.parse(address);
     return validAddress;
+}
+
+export async function fetchVotersList() {
+    try {
+        const tx = await contractMethod.methods.getVotersList().call();
+        const data = JSON.stringify(tx);
+    }
+    catch (error) {
+            console.log(error);
+        }
 }

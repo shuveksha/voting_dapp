@@ -9,6 +9,8 @@ const VoterHome = () => {
     const [isElection, setIsElection] = useState(false);
     const [activeAddress, setActiveAddress] = useState("")
     const [citizenshipNo, setCitizenshipNo] = useState("");
+    const [votersList, setVotersList] = useState([]);
+
     async function checkInitialState() {
         try {
 
@@ -23,6 +25,16 @@ const VoterHome = () => {
             console.error(err);
         }
     }
+    
+    async function fetchVotersList() {
+        try {
+            const voters = await contractMethod.methods.getVotersList().call();
+            setVotersList(voters);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     function handleChange(e) {
         setCitizenshipNo(e.target.value);
     }
@@ -32,6 +44,7 @@ const VoterHome = () => {
             console.log(activeAddress)
             const tx = await contractMethod.methods.registerAsVoter(Number(citizenshipNo)).send({ from: activeAddress })
                 .on('confirmation', () => {
+                    console.log("tx");
                     console.log("Registered!");
                     setCitizenshipNo("");
                 });

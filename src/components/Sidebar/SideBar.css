@@ -139,6 +139,24 @@
     background-color: rgba(254, 254, 254, 0.1);
   }
   
+  .add-voter {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    column-gap: 2rem;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+  }
+  .add-voter {
+   
+    position: relative;
+    color: var(--white-color);
+    transition: 0.5s;
+    margin-bottom: 1.5rem;
+  }
+  .add-voter:hover {
+    font-weight: bold;
+    color: var(--white-color);
+    background-color: rgba(254, 254, 254, 0.1);
+  }
   .active {
     font-weight: bold;
     color: var(--white-color);

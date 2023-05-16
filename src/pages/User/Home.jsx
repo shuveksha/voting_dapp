@@ -5,7 +5,8 @@ import { contractMethod } from '../../api/electionContract';
 
 const Home = ({ isOwner, setIsOwner }) => {
   const [account, setAccount] = useState("");
-
+  const [address, setAddress] = useState("");
+  const [contract, setContract] = useState("");
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
