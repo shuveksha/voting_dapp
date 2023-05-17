@@ -1,64 +1,87 @@
 import React, { useEffect, useState } from 'react';
 import { contractMethod } from '../api/electionContract';
+
 const Results = () => {
   const [winningCandidate, setWinningCandidate] = useState({});
   const [otherCandidate, setOtherCandidate] = useState([]);
-  const [electionEnded, setElectionEnded] = useState(true)
+  const [electionEnded, setElectionEnded] = useState(false)
   console.log(winningCandidate);
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const state = await contractMethod.methods.getCurrentState().call();
+        if (Number(state) === 4) setElectionEnded(true);
+
+
         const result = await contractMethod.methods.checkResults().call();
         setWinningCandidate(result);
-
         const finalStats = await contractMethod.methods.getFinalStats().call();
-        console.log("Final Stats", finalStats)
         setOtherCandidate(finalStats);
       } catch (err) {
         console.error("Error fetching data: ", err);
       }
     };
-
     fetchData();
-  }, []);
 
+  }, []);
 
   return (
 
+    <div>
+      {electionEnded ?
 
-    <div className='result'>
-      <h1>Results</h1>
-      <hr />
-      <table>
-        <thead>
-          <tr>
-            <th>Party ID</th>
-            <th>Candidate Name</th>
-            <th>Vote Count</th>
-          </tr>
-          {/* winningCandidate here */}
-          <tr>
-            <td>{winningCandidate.partyId}</td>
-            <td>{winningCandidate.candidateName}</td>
-            <td>{winningCandidate.candidateVoteCount}</td>
-          </tr>
+        <div className='result'>
+          <h1>winning candidate</h1>
+          <hr />
+          <table>
+            <thead>
+              <tr>
+              <th>Party ID</th>
+              <th>Candidate Name</th>
+              <th>Vote Count</th>
 
-          {/* other candidate here */}
-          {otherCandidate.map((candidate, index) => (
+              </tr>
+              <tr>
+                
+                <td>{winningCandidate.partyId}</td>
+                <td>{winningCandidate.candidateName}</td>
+                <td>{winningCandidate.candidateVoteCount}</td>
+              </tr>
+            </thead>
+          </table>
+          <hr/>
 
-            <tr key={index}>
-              <td>{candidate.partyId}</td>
-              <td>{candidate.candidateName}</td>
-              <td>{candidate.candidateVoteCount}</td>
-            </tr>
-          ))}
+          {/* // table other candidats */}
+          <h1>Final stats</h1>
+          <hr />
+          <table>
+            <thead>
+              <tr>
+                <th>Party ID</th>
+                <th>Candidate Name</th>
+                <th>Vote Count</th>
+              </tr>
+              {otherCandidate.map((candidate, index) => (
+
+                <tr key={index}>
+                  <td>{candidate.partyId}</td>
+                  <td>{candidate.candidateName}</td>
+                  <td>{candidate.candidateVoteCount}</td>
+                </tr>
+              ))}
 
 
-        </thead>
-      </table>
-      <tbody>
+            </thead>
+          </table>
+          <tbody>
 
-      </tbody>
+          </tbody>
+        </div>
+
+          :null  }
+          {!electionEnded && <div className='loading'>
+          <div className='.loading-text'>Wait for election to end</div>
+          </div> }
     </div>
   )
 }
